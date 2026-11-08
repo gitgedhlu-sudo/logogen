@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogoGen AI | Instant Brand Identity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Playfair+Display:wght@700&family=Space+Grotesk:wght@500;700&family=Montserrat:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 { font-family: 'Space Grotesk'; font-size: 3rem; margin-bottom: 10px; }
+        p { color: #94a3b8; margin-bottom: 30px; }
+
+        .input-group {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex;
+            gap: 10px;
+            margin-bottom: 50px;
+        }
+        input {
+            flex: 1;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #334155;
+            background: #0f172a;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+        }
+        input:focus { border-color: var(--accent); }
+        button {
+            background: var(--accent);
+            color: #0f172a;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+        button:hover { transform: scale(1.05); }
+
+        #logo-display {
+            display: none;
+            background: white;
+            color: #333;
+            padding: 60px;
+            border-radius: 20px;
+            animation: fadeIn 0.5s ease;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .logo-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+        }
+        .logo-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>LogoGen <span style="color: var(--accent);">AI</span></h1>
+        <p>Type your business name and we'll design a matching logo instantly.</p>
+
+        <div class="input-group">
+            <input type="text" id="companyName" placeholder="e.g. Navjivan Timber Mart">
+            <button onclick="generateLogo()">Generate</button>
+        </div>
+
+        <div id="logo-display">
+            <div class="logo-wrapper" id="logo-content">
+                <!-- Logo will be injected here -->
+            </div>
+            <p style="color: #666; margin-top: 30px; font-size: 0.9rem;">Right click to save image</p>
+        </div>
+    </div>
+
+    <script>
+        const industryMap = {
+            timber: {
+                color: '#78350f',
+                font: 'Montserrat',
+                icon: '<path d="M12 2L4 7V17L12 22L20 17V7L12 2Z M12 5L16 8V15L12 18L8 15V8L12 5Z" fill="currentColor"/>' 
+                // Simplified wood/box icon
+            },
+            tech: {
+                color: '#0ea5e9',
+                font: 'Space Grotesk',
+                icon: '<path d="M12 2L2 7L12 12L22 7L12 2Z M2 17L12 22L22 17M12 12V22" stroke="currentColor" stroke-width="2" fill="none"/>'
+            },
+            cafe: {
+                color: '#92400e',
+                font: 'Playfair Display',
+                icon: '<path d="M18 8H15V6C15 3.79 13.21 2 11 2C8.79 2 7 3.79 7 6V8H4V17C4 19.21 5.79 21 8 21H16C18.21 21 20 19.21 20 17V8H18Z" fill="currentColor"/>'
+            },
+            health: {
+                color: '#10b981',
+                font: 'Inter',
+                icon: '<path d="M12 2L12 22M2 12L22 12" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>'
+            },
+            default: {
+                color: '#475569',
+                font: 'Inter',
+                icon: '<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/><path d="M12 8V12L15 15" stroke="currentColor" stroke-width="2"/>'
+            }
+        };
+
+        function generateLogo() {
+            const name = document.getElementById('companyName').value;
+            if (!name) return alert("Please enter a name");
+
+            const lowerName = name.toLowerCase();
+            let theme = industryMap.default;
+
+            // Logic to detect industry based on keywords
+            if (lowerName.includes('timber') || lowerName.includes('wood') || lowerName.includes('furniture')) {
+                theme = industryMap.timber;
+            } else if (lowerName.includes('tech') || lowerName.includes('software') || lowerName.includes('digital')) {
+                theme = industryMap.tech;
+            } else if (lowerName.includes('cafe') || lowerName.includes('coffee') || lowerName.includes('bakery')) {
+                theme = industryMap.cafe;
+            } else if (lowerName.includes('health') || lowerName.includes('clinic') || lowerName.includes('medical')) {
+                theme = industryMap.health;
+            }
+
+            const logoDisplay = document.getElementById('logo-display');
+            const logoContent = document.getElementById('logo-content');
+
+            logoContent.innerHTML = `
+                <svg class="logo-icon" viewBox="0 0 24 24" style="color: ${theme.color}">
+                    ${theme.icon}
+                </svg>
+                <div class="logo-text" style="color: ${theme.color}; font-family: ${theme.font}">
+                    ${name}
+                </div>
+            `;
+
+            logoDisplay.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
